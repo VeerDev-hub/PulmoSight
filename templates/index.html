@@ -1,0 +1,83 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>PulmoSight | X-ray screening support</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+  <main class="shell">
+    <header class="topbar">
+      <div class="brand"><span class="brand-mark">PS</span><span>PulmoSight</span></div>
+      <div class="status"><span class="status-dot"></span>Local model · EfficientNet-B0</div>
+    </header>
+
+    <section class="intro">
+      <p class="eyebrow">Chest X-ray screening support</p>
+      <h1>One image. A clearer model review.</h1>
+      <p class="lede">Upload a chest X-ray to see the model's TB probability, decision threshold, and attribution heatmap in one reviewable report.</p>
+    </section>
+
+    {% if error %}<div class="alert">{{ error }}</div>{% endif %}
+
+    {% if not result %}
+    <section class="upload-card">
+      <div class="upload-copy">
+        <span class="upload-icon">+</span>
+        <h2>Upload a chest X-ray</h2>
+        <p>PNG, JPG, JPEG, BMP, TIF, or TIFF · up to 20 MB</p>
+      </div>
+      <form method="post" enctype="multipart/form-data">
+        <label class="file-picker">
+          <input type="file" name="image" accept="image/png,image/jpeg,image/bmp,image/tiff" required>
+          <span>Choose image</span>
+        </label>
+        <button class="primary" type="submit">Run screening review <span>→</span></button>
+      </form>
+    </section>
+    {% else %}
+    <section class="result-head">
+      <div>
+        <p class="eyebrow">Screening result</p>
+        <h2>{{ result.prediction }}</h2>
+        <p class="muted">The classifier's output for this image at the selected operating threshold.</p>
+      </div>
+      <a class="secondary" href="/">Analyze another image</a>
+    </section>
+
+    <section class="metric-grid">
+      <article class="metric-card decision {% if result.prediction == 'TB' %}positive{% else %}normal{% endif %}">
+        <span>Model decision</span><strong>{{ result.prediction }}</strong>
+        <small>Threshold: {{ "%.2f"|format(result.threshold) }}</small>
+      </article>
+      <article class="metric-card">
+        <span>TB probability</span><strong>{{ result.tb_probability }}</strong>
+        <small>Confidence: {{ result.confidence }}</small>
+      </article>
+      <article class="metric-card">
+        <span>Compute device</span><strong>{{ result.device|upper }}</strong>
+        <small>EfficientNet-B0 · grayscale input</small>
+      </article>
+    </section>
+
+    <section class="visuals">
+      <div class="section-heading"><div><p class="eyebrow">Explainability</p><h3>What influenced the model?</h3></div><span class="legend"><i></i>Higher attribution</span></div>
+      <div class="image-grid">
+        <figure><img src="{{ result.input_url }}" alt="Uploaded chest X-ray"><figcaption>Original X-ray</figcaption></figure>
+        <figure><img src="{{ result.heatmap_url }}" alt="Grad-CAM model attribution heatmap"><figcaption>Attribution heatmap</figcaption></figure>
+        <figure class="wide"><img src="{{ result.overlay_url }}" alt="Grad-CAM overlay on the chest X-ray"><figcaption>Overlay · green outline is a broad activation extent, not a lesion boundary</figcaption></figure>
+      </div>
+      <a class="report-link" href="{{ result.report_url }}" target="_blank">Open the presentation report ↗</a>
+    </section>
+
+    <section class="interpretation-grid">
+      <article class="info-card"><span class="card-kicker">Attribution</span><h3>Model-highlighted regions</h3><p>The heatmap shows image regions that contributed to the TB-class score. It does not prove that TB is located there and can be influenced by projection, anatomy, image quality, or dataset bias.</p></article>
+      <article class="info-card"><span class="card-kicker">Severity</span><h3>Not available from this model</h3><p>This model has only two labels: TB and Normal. Heatmap intensity and probability must not be interpreted as mild, moderate, or severe disease.</p></article>
+      <article class="info-card guidance"><span class="card-kicker">WHO-aligned next step</span><h3>Screening is not diagnosis</h3><p>A positive model result should lead to clinical assessment and appropriate confirmatory testing under local TB and WHO guidance. A negative result does not rule out TB when symptoms or exposure risk are present.</p></article>
+    </section>
+    {% endif %}
+
+  </main>
+</body>
+</html>
