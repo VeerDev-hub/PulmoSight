@@ -1,0 +1,62 @@
+[
+  {
+    "file": "sample_1.png",
+    "thumb": "sample_1_thumb.jpg",
+    "truth": "TB",
+    "caption": "Test X-ray \u00b7 truth revealed after screening",
+    "note": "both models: TB",
+    "effnet_p": 0.979,
+    "pulmonet_p": 0.985,
+    "source_path": "data/cache512/val/tb/b8ed6df2f13a0932ec270111ed31a9d0_Abnormal.png"
+  },
+  {
+    "file": "sample_2.png",
+    "thumb": "sample_2_thumb.jpg",
+    "truth": "Normal",
+    "caption": "Test X-ray \u00b7 truth revealed after screening",
+    "note": "both models: Normal",
+    "effnet_p": 0.015,
+    "pulmonet_p": 0.008,
+    "source_path": "data/cache512/val/normal/4c5f6cba6ba2ce6e9b5de4f6cdeceba8_Normal.png"
+  },
+  {
+    "file": "sample_3.png",
+    "thumb": "sample_3_thumb.jpg",
+    "truth": "TB",
+    "caption": "Test X-ray \u00b7 truth revealed after screening",
+    "note": "the models disagree",
+    "effnet_p": 0.903,
+    "pulmonet_p": 0.181,
+    "source_path": "data/cache512/val/tb/48904973bebc18f7bc316d8b0e1298a4_Abnormal.png"
+  },
+  {
+    "file": "sample_4.png",
+    "thumb": "sample_4_thumb.jpg",
+    "truth": "TB",
+    "caption": "Test X-ray \u00b7 truth revealed after screening",
+    "note": "both models: TB",
+    "effnet_p": 0.984,
+    "pulmonet_p": 0.982,
+    "source_path": "data/cache512/val/tb/582c41749a278417711d693bd082d3ad_Abnormal.png"
+  },
+  {
+    "file": "sample_5.png",
+    "thumb": "sample_5_thumb.jpg",
+    "truth": "Normal",
+    "caption": "Test X-ray \u00b7 truth revealed after screening",
+    "note": "both models: Normal",
+    "effnet_p": 0.011,
+    "pulmonet_p": 0.011,
+    "source_path": "data/cache512/val/normal/0eef4fee9970697d3afb0f023ca43330_Normal.png"
+  },
+  {
+    "file": "sample_6.png",
+    "thumb": "sample_6_thumb.jpg",
+    "truth": "Normal",
+    "caption": "Test X-ray \u00b7 truth revealed after screening",
+    "note": "a hard case",
+    "effnet_p": 0.924,
+    "pulmonet_p": 0.953,
+    "source_path": "data/cache512/val/normal/Normal_Training_12883.png"
+  }
+]

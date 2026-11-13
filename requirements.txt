@@ -1,10 +1,14 @@
+# CPU-only PyTorch (Streamlit Cloud has no GPU; the default CUDA build is >2 GB)
+--extra-index-url https://download.pytorch.org/whl/cpu
 torch
 torchvision
 Pillow
-tqdm
 numpy
+pandas
+streamlit>=1.46
+altair
+# notebooks only
+tqdm
 scikit-learn
 matplotlib
 seaborn
-pandas
-Flask

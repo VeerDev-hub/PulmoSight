@@ -1,21 +1,43 @@
+# ---------------------------------------------------------------- Python & notebooks
 .venv/
+venv/
+env/
 __pycache__/
-web_outputs/
-*.pyc
-cache512/
-results/
-sample_images/
-test/
-.DS_Store
-docs
+*.py[cod]
+.ipynb_checkpoints/
+
+# ---------------------------------------------------------------- Editors & OS
 .vscode/
+.idea/
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# ---------------------------------------------------------------- Datasets (large; obtained separately)
+# data/raw/{train,val}, data/cache512, data/lungcrop512, data/lungmask512, data/lungcrop_mask512, data/external_samples
+data/
+
+# ---------------------------------------------------------------- Scratch & logs
 *.log
 *.tmp
 *.bak
 *.pkl
 *.pickle
-.ipynb_checkpoints/
-web_outputs/*
-train/
-val/
-models/
+
+# ---------------------------------------------------------------- Trained weights & results
+# Everything is ignored except the files the Streamlit app needs at runtime.
+models/**
+!models/**/
+!models/simple_cnn/best.pth
+!models/pulmonet/best.pth
+!models/efficientnet_b0/best.pth
+
+results/**
+!results/**/
+!results/comparison/comparison_3models.json
+!results/comparison/ensemble.json
+
+# ---------------------------------------------------------------- Trailer build intermediates
+# The rendered MP4 is kept; regenerate the rest with scripts/make_soundtrack.py and scripts/render_trailer.py --stills
+assets/trailer/*.wav
+assets/trailer/stills/

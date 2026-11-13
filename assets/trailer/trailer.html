@@ -1,0 +1,292 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>PulmoSight Trailer</title>
+<style>
+  :root { --bg:#070f0d; --ink:#eef5f2; --muted:#8fa49d; --teal:#19b5a5; --teal2:#0b8a7e; --coral:#ef7a62; --violet:#8b5cf6; --slate:#8796ab; --amber:#f59e0b; }
+  * { box-sizing:border-box; margin:0; padding:0; }
+  html, body { width:1920px; height:1080px; overflow:hidden; background:var(--bg); color:var(--ink);
+               font-family:"Segoe UI Variable Display", "Segoe UI", system-ui, sans-serif; }
+  #stage { position:relative; width:1920px; height:1080px; overflow:hidden;
+           background:radial-gradient(1100px 760px at 78% 18%, #0f2b26 0%, transparent 62%), radial-gradient(900px 700px at 8% 92%, #0b1f1b 0%, transparent 60%), var(--bg); }
+  #grid { position:absolute; inset:-80px; background-image:linear-gradient(rgba(25,181,165,.045) 1px, transparent 1px), linear-gradient(90deg, rgba(25,181,165,.045) 1px, transparent 1px); background-size:80px 80px; }
+  #vignette { position:absolute; inset:0; pointer-events:none; background:radial-gradient(ellipse at center, transparent 55%, rgba(0,0,0,.55) 100%); }
+  .scene { position:absolute; inset:0; opacity:0; }
+  .center { display:flex; flex-direction:column; align-items:center; justify-content:center; text-align:center; }
+  .kicker { font-size:24px; letter-spacing:8px; text-transform:uppercase; color:var(--teal); font-weight:600; }
+  .big { font-size:104px; font-weight:700; letter-spacing:-3px; line-height:1.04; }
+  .mid { font-size:60px; font-weight:650; letter-spacing:-1.5px; line-height:1.12; }
+  .small { font-size:30px; color:var(--muted); line-height:1.45; }
+  .accent { color:var(--teal); } .coral { color:var(--coral); } .amber { color:var(--amber); }
+  .src { position:absolute; bottom:56px; left:0; right:0; text-align:center; font-size:20px; color:#5f746d; }
+  .tile { position:absolute; width:150px; height:150px; border-radius:10px; overflow:hidden; background:#000; }
+  .tile img { width:100%; height:100%; object-fit:cover; display:block; }
+  .xray { position:absolute; border-radius:18px; overflow:hidden; box-shadow:0 40px 120px rgba(0,0,0,.65), 0 0 0 1px rgba(25,181,165,.28); }
+  .xray img { width:100%; height:100%; object-fit:cover; display:block; }
+  .scan { position:absolute; left:0; right:0; height:6px; background:linear-gradient(90deg, transparent, var(--teal), transparent); box-shadow:0 0 34px 10px rgba(25,181,165,.5); }
+  .fm { position:absolute; width:150px; height:150px; border-radius:10px; overflow:hidden; box-shadow:0 14px 40px rgba(0,0,0,.6); border:1px solid rgba(25,181,165,.35); }
+  .fm img { width:100%; height:100%; display:block; image-rendering:pixelated; }
+  .fmlabel { position:absolute; width:220px; text-align:center; font-size:24px; color:var(--muted); }
+  .fmlabel b { display:block; color:var(--ink); font-size:28px; }
+  .flow { position:absolute; height:3px; background:linear-gradient(90deg, transparent, var(--teal), transparent); }
+  .netcard { position:absolute; width:500px; border-radius:26px; padding:40px 44px; background:rgba(255,255,255,.045); border:1px solid rgba(255,255,255,.1); }
+  .netcard .name { font-size:40px; font-weight:700; } .netcard .desc { font-size:24px; color:var(--muted); margin-top:8px; min-height:66px; }
+  .netcard .acc { font-size:92px; font-weight:700; letter-spacing:-2px; margin-top:22px; font-variant-numeric:tabular-nums; }
+  .netcard .lbl { font-size:22px; color:var(--muted); }
+  .netcard .bar { height:10px; border-radius:99px; background:rgba(255,255,255,.08); margin-top:22px; overflow:hidden; } .netcard .bar i { display:block; height:100%; width:0; border-radius:99px; }
+  .orb { position:absolute; width:440px; height:440px; border-radius:50%; display:flex; flex-direction:column; align-items:center; justify-content:center;
+         background:radial-gradient(circle at 35% 30%, #fbbf24 0%, #d97706 55%, #92400e 100%); box-shadow:0 0 120px 30px rgba(245,158,11,.35); color:#1c1002; }
+  .orb .n { font-size:118px; font-weight:800; letter-spacing:-3px; line-height:1; font-variant-numeric:tabular-nums; } .orb .l { font-size:30px; font-weight:700; margin-top:8px; }
+  .browser { position:absolute; border-radius:18px; overflow:hidden; background:#f5f6f1; box-shadow:0 50px 140px rgba(0,0,0,.7), 0 0 0 1px rgba(255,255,255,.08); }
+  .browser .bar { height:46px; background:#e3e8e3; display:flex; align-items:center; gap:10px; padding:0 18px; }
+  .browser .bar i { width:14px; height:14px; border-radius:50%; display:block; }
+  .browser .bar span { margin-left:24px; flex:1; height:28px; border-radius:8px; background:#fff; color:#55625e; font-size:17px; display:flex; align-items:center; padding-left:14px; }
+  .browser .view { position:relative; overflow:hidden; }
+  .browser .view img { position:absolute; left:0; top:0; width:100%; }
+  .stat { display:flex; flex-direction:column; align-items:center; gap:6px; }
+  .stat b { font-size:84px; font-weight:700; color:var(--teal); letter-spacing:-2px; font-variant-numeric:tabular-nums; } .stat span { font-size:27px; color:var(--muted); }
+  .mark { width:150px; height:150px; border-radius:38px; background:linear-gradient(135deg, var(--teal), var(--teal2)); display:grid; place-items:center; box-shadow:0 22px 80px rgba(25,181,165,.4); }
+  .ring { position:absolute; left:50%; top:50%; border-radius:50%; border:2px solid rgba(25,181,165,.5); transform:translate(-50%, -50%); }
+  .ecg { position:absolute; left:0; top:0; }
+</style>
+</head>
+<body>
+<div id="stage">
+  <div id="grid"></div>
+
+  <!-- 1 · The problem -->
+  <div class="scene center" id="s1">
+    <svg class="ecg" id="ecg" width="1920" height="1080" viewBox="0 0 1920 1080">
+      <path id="ecgpath" d="M0 540 H640 l40 -10 l30 20 l40 -170 l50 330 l40 -230 l30 60 l30 0 H1920" fill="none" stroke="#19b5a5" stroke-width="4" stroke-linejoin="round" opacity=".55"/>
+    </svg>
+    <div class="kicker" id="s1k" style="margin-bottom:40px">Tuberculosis · 2023</div>
+    <div class="big" id="s1a"><span class="coral" id="s1n">0</span> million people fell ill.</div>
+    <div class="mid" id="s1b" style="margin-top:26px;color:var(--muted)"><span class="ink" style="color:var(--ink)">1.25 million</span> died.</div>
+    <div class="src" id="s1s">Source: WHO Global Tuberculosis Report 2024</div>
+  </div>
+
+  <!-- 2 · The X-ray wall -->
+  <div class="scene" id="s2">
+    <div id="wall" style="position:absolute;inset:0"></div>
+    <div id="s2shade" style="position:absolute;inset:0;background:linear-gradient(90deg, rgba(7,15,13,.97) 0%, rgba(7,15,13,.85) 42%, rgba(7,15,13,.25) 75%, rgba(7,15,13,.1) 100%)"></div>
+    <div class="mid" id="s2a" style="position:absolute;left:150px;top:370px;width:900px">Chest X-rays are the<br><span class="accent">front line</span> of TB screening.</div>
+    <div class="small" id="s2b" style="position:absolute;left:150px;top:560px;width:820px">Reading every one of them takes radiologists' time<br>that many health systems simply don't have.</div>
+  </div>
+
+  <!-- 3 · Logo -->
+  <div class="scene center" id="s3">
+    <div class="ring" id="r1"></div><div class="ring" id="r2"></div>
+    <div style="display:flex;align-items:center;gap:40px" id="s3logo">
+      <div class="mark">
+        <svg width="98" height="98" viewBox="0 0 92 92" fill="none">
+          <path d="M43 14v26c0 6-4 9-8 11" stroke="#04201c" stroke-width="5" stroke-linecap="round"/>
+          <path d="M49 14v26c0 6 4 9 8 11" stroke="#04201c" stroke-width="5" stroke-linecap="round"/>
+          <path d="M34 30c-12 4-22 18-22 36 0 9 5 13 12 11l12-4c4-1 6-5 6-9V36c0-4-4-7-8-6z" fill="#04201c"/>
+          <path d="M58 30c12 4 22 18 22 36 0 9-5 13-12 11l-12-4c-4-1-6-5-6-9V36c0-4 4-7 8-6z" fill="#04201c"/>
+        </svg>
+      </div>
+      <div style="font-size:160px;font-weight:700;letter-spacing:-5px">Pulmo<span class="accent">Sight</span></div>
+    </div>
+    <div class="small" id="s3t" style="margin-top:44px;font-size:40px">AI that reads chest X-rays for signs of tuberculosis</div>
+  </div>
+
+  <!-- 4 · Inside the network -->
+  <div class="scene" id="s4">
+    <div class="kicker" id="s4k" style="position:absolute;left:0;right:0;top:110px;text-align:center">Inside the network</div>
+    <div class="mid" id="s4h" style="position:absolute;left:0;right:0;top:160px;text-align:center">Every layer sees the X-ray differently</div>
+    <div class="xray" id="s4x" style="left:110px;top:400px;width:300px;height:300px"><img src="xray.png" alt=""></div>
+    <div id="fmaps"></div>
+    <div id="s4out" style="position:absolute;left:1640px;top:440px;width:200px;text-align:center">
+      <div style="font-size:24px;color:var(--muted)">TB probability</div>
+      <div style="font-size:84px;font-weight:700;color:var(--coral);font-variant-numeric:tabular-nums" id="s4p">0%</div>
+    </div>
+    <div class="small" id="s4c" style="position:absolute;left:0;right:0;top:880px;text-align:center;font-size:26px">Real activations of PulmoNet on this X-ray · resolution falls, abstraction rises</div>
+  </div>
+
+  <!-- 5 · Three networks -->
+  <div class="scene" id="s5">
+    <div class="kicker" id="s5k" style="position:absolute;left:0;right:0;top:120px;text-align:center">Three architectures · one fair test</div>
+    <div class="mid" id="s5h" style="position:absolute;left:0;right:0;top:170px;text-align:center">Same 13,445 training X-rays. Same rules.</div>
+    <div class="netcard" id="c1" style="left:150px;top:330px"><div class="name">Simple CNN</div><div class="desc">5 plain conv blocks · 0.39 M params · from scratch</div><div class="acc" id="a1">0.0%</div><div class="lbl">test accuracy</div><div class="bar"><i id="b1" style="background:var(--slate)"></i></div></div>
+    <div class="netcard" id="c2" style="left:710px;top:330px"><div class="name">PulmoNet</div><div class="desc">custom residual CNN · 4.1 M params · from scratch</div><div class="acc" id="a2">0.0%</div><div class="lbl">test accuracy</div><div class="bar"><i id="b2" style="background:var(--violet)"></i></div></div>
+    <div class="netcard" id="c3" style="left:1270px;top:330px"><div class="name">EfficientNet-B0</div><div class="desc">ImageNet transfer learning · 4.0 M params</div><div class="acc" id="a3">0.0%</div><div class="lbl">test accuracy</div><div class="bar"><i id="b3" style="background:var(--teal)"></i></div></div>
+    <div class="small" id="s5c" style="position:absolute;left:0;right:0;top:860px;text-align:center">Scored on 1,681 X-rays none of them ever saw.</div>
+  </div>
+
+  <!-- 6 · Ensemble -->
+  <div class="scene" id="s6">
+    <div class="kicker" id="s6k" style="position:absolute;left:0;right:0;top:110px;text-align:center;color:var(--amber)">Better together</div>
+    <svg id="s6lines" width="1920" height="1080" style="position:absolute;left:0;top:0">
+      <path id="l1" d="M410 300 C 640 300, 780 540, 960 540" fill="none" stroke="#8796ab" stroke-width="5"/>
+      <path id="l2" d="M410 540 C 640 540, 780 540, 960 540" fill="none" stroke="#8b5cf6" stroke-width="5"/>
+      <path id="l3" d="M410 780 C 640 780, 780 540, 960 540" fill="none" stroke="#19b5a5" stroke-width="5"/>
+    </svg>
+    <div id="s6n1" style="position:absolute;left:110px;top:270px;font-size:34px;font-weight:600">Simple CNN <span style="color:var(--muted);font-size:26px">30%</span></div>
+    <div id="s6n2" style="position:absolute;left:110px;top:510px;font-size:34px;font-weight:600">PulmoNet <span style="color:var(--muted);font-size:26px">20%</span></div>
+    <div id="s6n3" style="position:absolute;left:110px;top:750px;font-size:34px;font-weight:600">EfficientNet <span style="color:var(--muted);font-size:26px">50%</span></div>
+    <div class="orb" id="orb" style="left:960px;top:540px;transform:translate(-50%,-50%) scale(0)"><div class="n" id="s6a">0.0%</div><div class="l">Ensemble accuracy</div></div>
+    <div id="s6t" style="position:absolute;left:1240px;top:400px;width:600px">
+      <div class="mid" style="font-size:52px">A weighted vote<br>beats every single model.</div>
+      <div class="small" style="margin-top:22px">+1.4 points over EfficientNet-B0<br>statistically significant · p = 0.007</div>
+    </div>
+  </div>
+
+  <!-- 7 · The product -->
+  <div class="scene" id="s7">
+    <div class="kicker" id="s7k" style="position:absolute;left:150px;top:150px">The app</div>
+    <div class="mid" id="s7h" style="position:absolute;left:150px;top:200px;width:560px;font-size:56px">Upload.<br>Choose a model.<br><span class="accent">Get an answer you can read.</span></div>
+    <div class="small" id="s7c" style="position:absolute;left:150px;top:560px;width:540px;font-size:26px">Calibrated TB probability, how certain the call is, how each network voted, and what to do next.</div>
+    <div class="browser" id="br" style="left:780px;top:130px;width:1040px;height:760px">
+      <div class="bar"><i style="background:#ef6b5f"></i><i style="background:#f3bd4f"></i><i style="background:#5fc86a"></i><span>PulmoSight · Test an X-ray</span></div>
+      <div class="view" style="height:714px">
+        <img id="shotA" src="shots/test_sample1.png" alt="">
+        <img id="shotB" src="shots/comparison.png" alt="" style="opacity:0">
+      </div>
+    </div>
+  </div>
+
+  <!-- 8 · End card -->
+  <div class="scene center" id="s8">
+    <div style="display:flex;align-items:center;gap:34px" id="s8t">
+      <div class="mark" style="width:120px;height:120px;border-radius:30px">
+        <svg width="78" height="78" viewBox="0 0 92 92" fill="none"><path d="M43 14v26c0 6-4 9-8 11" stroke="#04201c" stroke-width="5" stroke-linecap="round"/><path d="M49 14v26c0 6 4 9 8 11" stroke="#04201c" stroke-width="5" stroke-linecap="round"/><path d="M34 30c-12 4-22 18-22 36 0 9 5 13 12 11l12-4c4-1 6-5 6-9V36c0-4-4-7-8-6z" fill="#04201c"/><path d="M58 30c12 4 22 18 22 36 0 9-5 13-12 11l-12-4c-4-1-6-5-6-9V36c0-4 4-7 8-6z" fill="#04201c"/></svg>
+      </div>
+      <div style="font-size:128px;font-weight:700;letter-spacing:-4px">Pulmo<span class="accent">Sight</span></div>
+    </div>
+    <div style="display:flex;gap:130px;margin-top:70px" id="s8s">
+      <div class="stat"><b id="k1">0</b><span>chest X-rays</span></div>
+      <div class="stat"><b>3 + 1</b><span>CNNs + ensemble</span></div>
+      <div class="stat"><b id="k3">0.0%</b><span>test accuracy</span></div>
+    </div>
+    <div class="small" id="s8b" style="margin-top:76px;font-size:34px;color:var(--ink)">Try it live · built with PyTorch &amp; Streamlit</div>
+    <div class="small" id="s8d" style="margin-top:16px;font-size:22px">Research project · not a diagnostic device</div>
+  </div>
+
+  <div id="vignette"></div>
+  <div id="flash" style="position:absolute;inset:0;background:#fff;opacity:0;pointer-events:none"></div>
+</div>
+
+<script>
+const DURATION = 46;
+const $ = (id) => document.getElementById(id);
+const clamp = (x, a = 0, b = 1) => Math.min(b, Math.max(a, x));
+const ramp = (t, a, b) => clamp((t - a) / (b - a));
+const ease = (x) => { x = clamp(x); return x < 0.5 ? 4 * x * x * x : 1 - Math.pow(-2 * x + 2, 3) / 2; };
+const out = (x) => 1 - Math.pow(1 - clamp(x), 3);
+const back = (x) => { x = clamp(x); const c = 1.7; return 1 + (c + 1) * Math.pow(x - 1, 3) + c * Math.pow(x - 1, 2); };
+const vis = (t, a, b, f = 0.7) => ramp(t, a, a + f) * (1 - ramp(t, b - f, b));
+function enter(el, t, a, dy = 40, d = 0.9) { const p = out(ramp(t, a, a + d)); el.style.opacity = p; el.style.transform = `translateY(${(1 - p) * dy}px)`; }
+const fmt = (v, d = 1) => v.toFixed(d);
+
+// --- X-ray wall (scene 2): sample thumbnails tiled with varied tone
+const wall = $("wall"), TILES = [];
+const thumbs = [1, 2, 3, 4, 5, 6].map((i) => `../samples/sample_${i}_thumb.jpg`);
+for (let r = 0; r < 8; r++) for (let c = 0; c < 13; c++) {
+  const d = document.createElement("div"); d.className = "tile";
+  d.style.left = `${c * 166 - 60 + (r % 2) * 83}px`; d.style.top = `${r * 166 - 120}px`;
+  const k = (r * 7 + c * 3) % 6, img = document.createElement("img"); img.src = thumbs[k];
+  img.style.filter = `brightness(${0.55 + ((r * 13 + c * 7) % 10) / 22}) contrast(1.1)`;
+  if ((r + c) % 3 === 0) img.style.transform = "scaleX(-1)";
+  d.appendChild(img); wall.appendChild(d); TILES.push({ el: d, r, c, seed: ((r * 31 + c * 17) % 23) / 23 });
+}
+
+// --- feature maps (scene 4): real PulmoNet activations, 3 per stage
+const STAGES = [["stem", "128 × 128", "Stem"], ["stage2", "64 × 64", "Stage 2"], ["stage3", "32 × 32", "Stage 3"], ["stage4", "16 × 16", "Stage 4"]];
+const fmaps = $("fmaps"), FM = [];
+STAGES.forEach(([key, res, label], s) => {
+  const x0 = 520 + s * 270;
+  for (let j = 0; j < 3; j++) {
+    const d = document.createElement("div"); d.className = "fm";
+    const size = 170 - s * 22; d.style.width = d.style.height = `${size}px`;
+    d.style.left = `${x0 + j * 18}px`; d.style.top = `${550 - size / 2 - 60 + j * 60}px`;
+    d.innerHTML = `<img src="fmaps/${key}_${j}.png" alt="">`; fmaps.appendChild(d); FM.push({ el: d, s, j });
+  }
+  const l = document.createElement("div"); l.className = "fmlabel"; l.style.left = `${x0 - 25}px`; l.style.top = "770px";
+  l.innerHTML = `<b>${label}</b>${res}`; fmaps.appendChild(l); FM.push({ el: l, s, j: 3, label: true });
+});
+const flows = [];
+for (let s = 0; s < 5; s++) { const f = document.createElement("div"); f.className = "flow"; f.style.left = `${420 + s * 270}px`; f.style.top = "548px"; f.style.width = "90px"; fmaps.appendChild(f); flows.push(f); }
+
+// ECG path length
+const ecg = $("ecgpath"), ECGLEN = ecg.getTotalLength(); ecg.style.strokeDasharray = ECGLEN;
+["l1", "l2", "l3"].forEach((id) => { const p = $(id); const L = p.getTotalLength(); p.style.strokeDasharray = L; p.dataset.len = L; });
+
+function render(t) {
+  $("grid").style.transform = `translate(${-(t * 7) % 80}px, ${-(t * 4) % 80}px)`;
+  $("flash").style.opacity = 0.18 * (1 - ramp(t, 11.2, 11.9)) * ramp(t, 11.0, 11.2);
+
+  // 1 · 0–5.6 — the problem
+  $("s1").style.opacity = vis(t, 0, 5.6);
+  ecg.style.strokeDashoffset = ECGLEN * (1 - ease(ramp(t, 0.1, 1.6)));
+  $("ecg").style.opacity = 1 - ramp(t, 1.6, 2.4);
+  enter($("s1k"), t, 1.4, 20); enter($("s1a"), t, 1.8); enter($("s1b"), t, 3.1, 25); enter($("s1s"), t, 3.6, 10);
+  $("s1n").textContent = fmt(10.8 * ease(ramp(t, 1.9, 3.0)));
+
+  // 2 · 5.4–11.2 — X-ray wall
+  $("s2").style.opacity = vis(t, 5.4, 11.2);
+  const z = 1.18 - 0.14 * ease(ramp(t, 5.4, 11.2));
+  wall.style.transform = `scale(${z}) translate(${(1 - ramp(t, 5.4, 11.2)) * 40}px, 0)`;
+  TILES.forEach(({ el, seed }) => { el.style.opacity = out(ramp(t, 5.5 + seed * 1.6, 6.2 + seed * 1.6)); });
+  enter($("s2a"), t, 6.4); enter($("s2b"), t, 7.6, 25);
+
+  // 3 · 11.0–15.8 — logo
+  $("s3").style.opacity = vis(t, 11.0, 15.8);
+  const lp = back(ramp(t, 11.2, 12.3));
+  $("s3logo").style.opacity = ramp(t, 11.2, 11.7); $("s3logo").style.transform = `scale(${0.8 + 0.2 * lp})`;
+  [["r1", 11.2], ["r2", 11.5]].forEach(([id, a]) => { const p = out(ramp(t, a, a + 2.2)); const s = 200 + 1500 * p;
+    $(id).style.width = $(id).style.height = `${s}px`; $(id).style.opacity = (1 - p) * 0.8; });
+  enter($("s3t"), t, 12.6, 25);
+
+  // 4 · 15.6–23.4 — inside the network
+  $("s4").style.opacity = vis(t, 15.6, 23.4);
+  enter($("s4k"), t, 15.8, 15); enter($("s4h"), t, 16.0, 25);
+  const xp = out(ramp(t, 16.3, 17.1)); $("s4x").style.opacity = xp; $("s4x").style.transform = `scale(${0.9 + 0.1 * xp})`;
+  FM.forEach(({ el, s, j, label }) => { const a = 17.0 + s * 0.85 + (label ? 0.25 : j * 0.12); const p = out(ramp(t, a, a + 0.6));
+    el.style.opacity = p; el.style.transform = `translateX(${(1 - p) * -40}px) scale(${0.85 + 0.15 * p})`; });
+  flows.forEach((f, s) => { const a = 16.8 + s * 0.85; const p = ramp(t, a, a + 0.5); f.style.opacity = p * (1 - 0.5 * ramp(t, a + 0.6, a + 1.2)); f.style.transform = `scaleX(${p})`; f.style.transformOrigin = "left"; });
+  $("s4out").style.opacity = out(ramp(t, 20.4, 21.0));
+  $("s4p").textContent = `${fmt(97.5 * ease(ramp(t, 20.5, 21.8)), 1)}%`;
+  enter($("s4c"), t, 21.2, 15);
+
+  // 5 · 23.2–30.6 — three networks
+  $("s5").style.opacity = vis(t, 23.2, 30.6);
+  enter($("s5k"), t, 23.4, 15); enter($("s5h"), t, 23.6, 25);
+  [83.5, 83.5, 85.4].forEach((v, i) => {
+    enter($(`c${i + 1}`), t, 24.2 + i * 0.35, 60);
+    const p = ease(ramp(t, 25.0 + i * 0.35, 26.8 + i * 0.35));
+    $(`a${i + 1}`).textContent = `${fmt(v * p)}%`; $(`b${i + 1}`).style.width = `${v * p}%`;
+  });
+  const g = ramp(t, 27.4, 28.0); $("c3").style.boxShadow = `0 0 ${60 * g}px ${6 * g}px rgba(25,181,165,.35)`; $("c3").style.borderColor = `rgba(25,181,165,${0.1 + 0.5 * g})`;
+  enter($("s5c"), t, 27.6, 15);
+
+  // 6 · 30.4–36.6 — ensemble
+  $("s6").style.opacity = vis(t, 30.4, 36.6);
+  enter($("s6k"), t, 30.6, 15);
+  ["s6n1", "s6n2", "s6n3"].forEach((id, i) => enter($(id), t, 30.8 + i * 0.2, 0));
+  ["l1", "l2", "l3"].forEach((id, i) => { const p = $(id); p.style.strokeDashoffset = p.dataset.len * (1 - ease(ramp(t, 31.3 + i * 0.15, 32.6 + i * 0.15))); });
+  const ob = back(ramp(t, 32.5, 33.4)); $("orb").style.transform = `translate(-50%,-50%) scale(${ob})`;
+  $("s6a").textContent = `${fmt(86.7 * ease(ramp(t, 32.7, 34.0)))}%`;
+  enter($("s6t"), t, 33.6, 30);
+
+  // 7 · 36.4–42.4 — the product
+  $("s7").style.opacity = vis(t, 36.4, 42.4);
+  enter($("s7k"), t, 36.6, 15); enter($("s7h"), t, 36.8, 30); enter($("s7c"), t, 37.6, 20);
+  const bp = out(ramp(t, 36.7, 37.7)); $("br").style.opacity = bp; $("br").style.transform = `translateY(${(1 - bp) * 80}px) perspective(2000px) rotateY(${(1 - bp) * -8}deg)`;
+  $("shotA").style.transform = `translateY(${-ease(ramp(t, 37.6, 39.6)) * 120}px)`;
+  $("shotB").style.opacity = ease(ramp(t, 39.8, 40.5)); $("shotB").style.transform = `translateY(${-ease(ramp(t, 40.4, 42.2)) * 140}px)`;
+
+  // 8 · 42.2–46 — end card
+  $("s8").style.opacity = ramp(t, 42.2, 42.9) * (1 - ramp(t, 45.4, 46));
+  enter($("s8t"), t, 42.4); enter($("s8s"), t, 43.0); enter($("s8b"), t, 43.6, 20); enter($("s8d"), t, 43.9, 10);
+  const kp = ease(ramp(t, 43.0, 44.2));
+  $("k1").textContent = Math.round(16785 * kp).toLocaleString("en-US"); $("k3").textContent = `${fmt(86.7 * kp)}%`;
+}
+
+if (!window.__FRAME_MODE__) {
+  const t0 = performance.now();
+  (function loop(now) { render(((now - t0) / 1000) % DURATION); requestAnimationFrame(loop); })(t0);
+}
+</script>
+</body>
+</html>

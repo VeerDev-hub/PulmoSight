@@ -6,7 +6,7 @@ full-resolution originals every epoch (the usual bottleneck on a single GPU).
 Keeps the train/ and val/ class-folder layout.
 
 Usage:
-    python prepare_cache.py --src "D:/IN-CXR" --dst "D:/IN-CXR_512" --size 512
+    python scripts/prepare_cache.py --src data/raw --dst data/cache512 --size 512
 """
 import argparse
 from concurrent.futures import ProcessPoolExecutor
