@@ -1,4 +1,4 @@
-# PulmoSight 🫁
+# PulmoSight 
 
 **Deep learning that reads chest X-rays for signs of tuberculosis.**
 
@@ -9,7 +9,7 @@ A Streamlit app lets anyone test the models on their own X-ray.
 
 > ⚠️ Research and portfolio project. **Not a medical device and not a diagnosis.**
 
-🎬 **Trailer:** [`assets/trailer/PulmoSight_trailer.mp4`](assets/trailer/PulmoSight_trailer.mp4) (46 s, with sound). It also plays on the app's home page.
+**Trailer:** [`assets/trailer/PulmoSight_trailer.mp4`](assets/trailer/PulmoSight_trailer.mp4) (46 s, with sound). It also plays on the app's home page.
 
 | Test an X-ray | Model comparison |
 |---|---|
@@ -55,7 +55,7 @@ streamlit run streamlit_app.py          # → http://localhost:8501
 
 Uploads are processed in memory and never stored. Inference takes well under a second on a CPU.
 
-📖 **New to CNNs?** [`docs/CNN_Explanation.md`](docs/CNN_Explanation.md) walks through all three networks layer by layer,
+**New to CNNs?** [`docs/CNN_Explanation.md`](docs/CNN_Explanation.md) walks through all three networks layer by layer,
 how they were trained, and how the ensemble decides.
 
 **Why there are no heatmaps:** Grad-CAM showed that the models sometimes use cues outside the lungs (bones, film borders,
